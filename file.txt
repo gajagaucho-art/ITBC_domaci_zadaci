@@ -1,1 +1,2 @@
-text
+Pozdrav ja sam Jovan Gajic iz Beograda
+Polaznik sam ITBC skole Data Engineering
