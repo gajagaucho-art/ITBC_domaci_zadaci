@@ -1,7 +1,7 @@
-                 Domaci zadatak 1.2
+                # Domaci zadatak 1.2
 
 
-interesovanja i tehnologije koje zelim da nausim su:
+## interesovanja i tehnologije koje zelim da nausim su:
 
 1. Python
 2. SQL
