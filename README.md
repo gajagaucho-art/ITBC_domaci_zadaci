@@ -14,4 +14,4 @@ dbt for data transformation, testing, and documentation
 Apache Airflow for data pipeline orchestration and automation
 
 
-tokom kursa ocekujem da cemo obraditi python, sql i  pandas
+tokom kursa ocekujem da cemo obraditi python, sql i  pandas, takodje bih zeleo da naucim nesto vise i o apache spark i pyspark
