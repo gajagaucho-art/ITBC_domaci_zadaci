@@ -1,0 +1,51 @@
+-- Domaci zadatak 2.1
+--1
+select 
+stadium_name,stadium_capacity,attendance, stadium_capacity - attendance as empty_seats
+from matches_flat  
+order by empty_seats desc limit 5 --prve 3 koje imaju najveci broj praznis sedista se odigrao na National Stadium
+
+--2
+select 
+distinct referee_name, home_team
+from matches_flat
+where home_team = 'Riverton Athletic' --15
+
+--3
+select 
+home_team, home_goals_ht,away_goals_ht, home_goals, away_goals, away_team
+from matches_flat
+where (home_goals_ht < away_goals_ht) and (home_goals > away_goals) --15
+
+--4
+select 
+home_team, away_team, home_goals_ht, away_goals_ht, home_goals, away_goals, home_goals +away_goals as FT, home_goals_ht + away_goals_ht as HT,
+(home_goals +away_goals) -( home_goals_ht + away_goals_ht) as goals_second_half , ( home_goals_ht + away_goals_ht) as goals_first_half
+from matches_flat
+where ((home_goals +away_goals) -( home_goals_ht + away_goals_ht)) > ( home_goals_ht + away_goals_ht) 
+order by FT desc limit 1  -- Northport United-Newbury Forest reza. na poluvremenu  1:0 , rez na kraju 6:3
+
+--5
+select 
+season, weather
+from matches_flat
+where season ='2023/24' and weather in ('snow', 'fog') --25 utakmica
+
+--6
+select 
+home_team,away_team, kickoff_ts, original_kickoff_ts, home_goals, away_goals
+from matches_flat
+where (home_team ='Northport United' and away_team ='Northport City') or (home_team ='Northport City' and away_team ='Northport United')
+order by kickoff_ts -- prvi mec pobedio Northport United, drugi je neresen, treci je pobedio Northport City i cetvrti Northport United
+
+--77
+select 
+season, kickoff_ts, original_kickoff_ts, home_team, away_team
+from matches_flat
+where season ='2024/25' order by kickoff_ts limit 3 -- druga i treca utakmice su pocele u isto vreme sortiralo sam po pocetno vremenu igranja
+
+--8
+select 
+home_team, away_team, first_goal_scorer
+from matches_flat
+where first_goal_scorer = "Sean O'Neill" -- 2 utakmice
