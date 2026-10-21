@@ -1,0 +1,77 @@
+--1
+select 
+count(*) as ukupno_utakmica,
+sum(home_goals + away_goals) as ukupno_golova,
+round(avg(home_goals + away_goals),2) as avg_golova,
+season
+from matches_flat 
+group by season;
+
+--2
+select 
+count(attendance) zabelezena_poseta,
+min(attendance) as min_poseta,
+max(attendance) as max_poseta,
+avg(attendance) as avg_poseta
+from matches_flat;
+
+--3
+select 
+count(referee_id) as sudije,
+referee_name,
+sum(home_yellow_cards + away_yellow_cards) as uk_zutih_kartona
+from matches_flat
+group by referee_name
+having sum(home_yellow_cards + away_yellow_cards) > 20 and count(referee_id) >10
+order by uk_zutih_kartona desc
+limit 10;
+
+--4
+select 
+case 
+when (home_goals + away_goals) = 0 then 'bez golova'
+when (home_goals + away_goals) in (1, 2) then 'malo golova'
+when  (home_goals + away_goals) >3 then 'mnogo golova'
+when (home_goals is null or away_goals is null) then 'nemamo podatak o golovima'
+else 'default'
+end as uk_golova,
+count(*) as ukupno_utakmica,
+max(home_goals + away_goals) as max_golova
+from matches_flat
+group by case 
+when (home_goals + away_goals) = 0 then 'bez golova'
+when (home_goals + away_goals) in (1, 2) then 'malo golova'
+when  (home_goals + away_goals) >3 then 'mnogo golova'
+when (home_goals is null or away_goals is null) then 'nemamo podatak o golovima'
+else 'default'
+end;
+--5
+select 
+home_team,
+count(*) as ukupno_utakmica,
+sum(case when home_goals > away_goals then 1 else 0 end) as broj_pobjeda,
+sum(case when home_goals < away_goals then 1 else 0 end) as broj_poraza
+from matches_flat
+group by home_team
+having count(*) >= 10
+
+--6
+select 
+referee_name,
+count(*) as ukupno_utakmica,
+sum(case when home_red_cards + away_red_cards >0 then 1 else 0  end) as crveni_kartoni,
+ROUND(100.0 * SUM(case when home_red_cards + away_red_cards > 0 then 1 else 0 end) / COUNT(*), 2 ) as procenat_sa_crvenim
+from matches_flat
+group by referee_name
+
+--7
+select
+season,
+count(*) as ukupno_utakmica,
+sum(case when home_goals >away_goals then 1 else 0 end) as pobede_domacina,
+SUM(case when home_goals = away_goals then  1 else 0 end) AS neresene_utakmice,
+sum(case when home_goals < away_goals then 1 else 0 end) as pobede_gostiju,
+round(100 * sum(case when home_goals = away_goals then  1 else 0 end) / count(*),2) as procenat_neresenih
+from matches_flat
+group by season
+order by season
