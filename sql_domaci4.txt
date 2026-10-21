@@ -1,0 +1,59 @@
+--1
+select 
+t.team_name, s.stadium_name
+from teams t join stadiums s on t.stadium_id = s.stadium_id; 
+
+--2 
+select distinct p.player_id,
+p.first_name,p.last_name,t.team_name
+from players p join player_match_stats pm on p.player_id = pm.player_id
+join teams t on pm.team_id = t.team_id
+join matches m on pm.match_id = m.match_id
+where m.season = '2024/25';
+
+-- 3
+select 
+m.kickoff_ts,m.attendance, s.stadium_name
+from matches m join stadiums s on m.stadium_id = s.stadium_id
+where m.season = '2024/25'
+order by m.kickoff_ts desc;
+
+--1
+
+select 
+m.attendance, m.kickoff_ts, h.team_name, a.team_name
+from matches m left join  teams h on m.home_team_id =  h.team_id
+join teams a on m.away_team_id = a.team_id
+where m.attendance is null;
+
+--2
+select
+p.first_name,p.last_name,ps.player_id, ps.team_id,sum(ps.minutes_played) as uk_minuta,t.team_name
+from player_match_stats as ps join players p on ps.player_id = p.player_id
+join teams t on ps.team_id = t.team_id 
+join matches m on ps.match_id = m.match_id
+where m.season = '2024/25' 
+group by p.first_name,p.last_name,ps.player_id, ps.team_id,t.team_name
+order by sum(ps.minutes_played) desc limit 3;
+
+--3
+select 
+    m.season AS sezona,
+    t.team_name AS klub,
+    count(*) as br_iskljucenja
+from 
+    match_events e join matches m on e.match_id = m.match_id
+join teams t on e.team_id = t.team_id 
+where  e.event_type in ('red_card', 'second_yellow')
+group by
+    m.season,
+    t.team_id,
+    t.team_name
+having 
+    count(*) >= 1
+order by m.season, br_iskljucenja desc;
+
+--odradicu naknadno i dodatne zadatke ovo sam odradio da bih predao na vreme :-)
+
+
+
