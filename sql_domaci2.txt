@@ -1,0 +1,55 @@
+-- domaci 2.2
+--1
+select 
+match_report, home_team, away_team
+from matches_flat
+where match_report ilike'%goal%'
+
+--2
+select referee_name,
+coalesce(referee_name,'Unknown') as referee_name
+from matches_flat
+limit 20
+
+--3
+select 
+length(match_report) as charNum,match_report, home_team, away_team
+from matches_flat 
+where length(match_report) >40
+
+--4
+ select 
+home_team, away_team, kickoff_ts, original_kickoff_ts
+ from matches_flat
+ where kickoff_ts >= '2025-01-01' and kickoff_ts < '2025-01-16' order by kickoff_ts
+
+ --5
+ select  
+date(kickoff_ts) as match_date,
+dayofweek(kickoff_ts) as week_day, home_team, away_team
+ from matches_flat
+where dayofweek(kickoff_ts) = 6  -- obzirom na to da SQL pocetak nedelje gleda Nedelju sto znaci da nam je Petak pod rednim brojem 6, mi nemamo utakmice odigrane na taj dan
+--6
+select 
+season, home_team,away_team, attendance
+from matches_flat
+where attendance between 20000 and 35000
+order by attendance desc --374 utakmice je bilo sa brojem gledalaza izmedju 20 000 i 35 000
+
+--7
+select 
+distinct first_goal_scorer
+from matches_flat
+where first_goal_scorer like'A%' or first_goal_scorer like'%-%' --22 razlicita igraca
+
+--8
+select 
+season, home_team, away_team, kickoff_ts --, hour(kickoff_ts), minute(kickoff_ts)
+from matches_flat
+where season = '2024/25' and  (hour(kickoff_ts) >= 18 and  hour(kickoff_ts) <= 21) order by  hour(kickoff_ts) desc
+
+--9
+select 
+season, kickoff_ts, home_team, away_team, match_report
+from matches_flat
+where match_report ilike'%win%' and season = '2024/25' and (kickoff_ts >= '2025-03-01' and kickoff_ts < '2025-06-01') --5 utakmica
