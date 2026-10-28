@@ -55,4 +55,21 @@ where uk_golova >= 50
 order by datum  -- prvi do 50 golova je stigao Kingsbridge City 
 
 
+
 --3
+with utakmice as (
+select 
+m.kickoff_ts as datum,
+t.team_name as klub,
+s.stadium_name as stadion,
+m.attendance as posecenost,
+lag(m.attendance) over (partition by m.home_team_id, m.season order by m.kickoff_ts ) as prethodna_posecenost
+from  matches m join teams t on m.home_team_id = t.team_id
+join stadiums s on m.stadium_id = s.stadium_id
+where m.season = '2024/25'
+)
+select klub,datum,stadion,prethodna_posecenost,posecenost,
+    (posecenost - prethodna_posecenost) as promena_posecenosti
+from utakmice
+where prethodna_posecenost is not null and klub = 'Northport City'  -- najveca je promena u 11 kolu 
+
