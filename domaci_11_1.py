@@ -38,3 +38,5 @@ def get_exchange_rate(base: str, target: str) -> float:
     return None
 print(get_exchange_rate("EUR", "RSD"))
 
+
+
